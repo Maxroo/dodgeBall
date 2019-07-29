@@ -18,10 +18,11 @@ public enum playerCharacter
 
 public class GameManager : MonoBehaviour
 {
+    public int playerNumber = 2;
     public Status gameMode = Status.game;
     public static GameManager instance;
     public movement p1;
-    public player2 p2;
+    public movement p2;
     public ball ball;
     public int turn = 0;
     public Text scoreText;

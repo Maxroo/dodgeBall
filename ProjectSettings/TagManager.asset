@@ -7,6 +7,8 @@ TagManager:
   - ball
   - p2
   - p1
+  - range
+  - Line
   layers:
   - Default
   - TransparentFX

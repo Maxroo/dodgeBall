@@ -5,21 +5,20 @@ using UnityEngine;
 public class ball : MonoBehaviour
 {
     private Vector2 screenBounds;
-
-    public bool hasParent;
     public GameObject parent;
-    public bool shooting = false;
-
+    public bool shooting, catchable,hasParent;
     public Rigidbody2D rb2D;
     private float catchableSpeed = 5f;
+    public SpriteRenderer sr;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        catchable = true;
         rb2D = gameObject.GetComponent<Rigidbody2D>();
         screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
-
+        sr = this.GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -51,5 +50,33 @@ public class ball : MonoBehaviour
     {
         rb2D.AddForce(forward * speed);
     }
+
+    /// <summary>
+    /// Sent when another object leaves a trigger collider attached to
+    /// this object (2D physics only).
+    /// </summary>
+    /// <param name="other">The other Collider2D involved in this collision.</param>
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if(other.tag == "range"){
+            if (hasParent)
+            {
+                hasParent = false;
+                catchable = true;
+            }
+        }
+        
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.tag == "Line"){
+            if(shooting){
+            sr.color = Color.white;
+            parent = null;
+            }
+        }
+    }
+
 
 }
