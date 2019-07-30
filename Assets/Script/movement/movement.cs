@@ -10,7 +10,7 @@ public class movement : MonoBehaviour
     [HideInInspector]
     public SpriteRenderer sr;
     [HideInInspector]
-    public playerCharacter character;
+    public int colorIndex,CharacterIndex;
     [HideInInspector]
     public string x = "Horizontal", y = "Vertical", throwKey = "Throw", catchKey = "Catch";
     [HideInInspector]
@@ -187,16 +187,16 @@ public class movement : MonoBehaviour
 
     public void initStats()
     {
-        switch (character)
+        switch (colorIndex)
         {
             default:
-            case playerCharacter.a:
+            case 0:
                 break;
-            case playerCharacter.b:
+            case 1:
                 speed = 0.3f;
                 force = 15f;
                 break;
-            case playerCharacter.c:
+            case 2:
                 force = 25f;
                 speed = 0.10f;
                 break;

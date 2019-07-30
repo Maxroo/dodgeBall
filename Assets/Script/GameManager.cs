@@ -9,15 +9,9 @@ public enum Status
     nextTurn
 }
 
-public enum playerCharacter
-{
-    a,
-    b,
-    c
-}
-
 public class GameManager : MonoBehaviour
 {
+    public List<Color> colors = new List<Color>();
     public int playerNumber = 2;
     public Status gameMode = Status.game;
     public static GameManager instance;
@@ -39,36 +33,23 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        CharacterManager characterManager = FindObjectOfType<CharacterManager>();
-        switch (characterManager.p1Index)
-        {
-            case 0:
-                p1.character = playerCharacter.a;
-                break;
-            case 1:
-                p1.character = playerCharacter.b;
-
-                break;
-            case 2:
-                p1.character = playerCharacter.c;
-                break;
-        }
-        switch (characterManager.p2Index)
-        {
-            case 0:
-                p2.character = playerCharacter.a;
-
-                break;
-            case 1:
-                p2.character = playerCharacter.b;
-
-                break;
-            case 2:
-                p2.character = playerCharacter.c;
-                break;
-        }
-        // p1.sr.sprite = characterManager.character[characterManager.p1Index];
-        // p2.sr.sprite = characterManager.character[characterManager.p2Index];
+        Color32 red = new Color32(253, 87, 87, 255);
+        Color32 blue = new Color32(74, 109, 226, 255);
+        Color32 green = new Color32(10, 157, 86, 255);
+        Color32 purple = new Color32(202, 88, 253, 255);
+        colors.Add(blue);
+        colors.Add(green);
+        colors.Add(purple);
+        colors.Add(red);
+        CharacterManager cm = FindObjectOfType<CharacterManager>();
+        p1.colorIndex = cm.p1colorIndex;
+        p1.CharacterIndex = cm.p1characterIndex;
+        p2.colorIndex = cm.p2colorIndex;
+        p2.CharacterIndex = cm.p2characterIndex;
+        p1.sr.sprite = cm.CharacterSet[p1.CharacterIndex][p1.colorIndex];
+        p2.sr.sprite = cm.CharacterSet[p2.CharacterIndex][p2.colorIndex];
+        p1.teamColor = colors[p1.colorIndex];
+        p2.teamColor = colors[p2.colorIndex];
         p1.initStats();
         p2.initStats();
     }

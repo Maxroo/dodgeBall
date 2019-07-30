@@ -11,6 +11,7 @@ public class fillTest : MonoBehaviour
     public bool hasBall;
     public float t = 1;
     movement movement;
+    
     public bool overTime = false;
     // Start is called before the first frame update
     void Start()
@@ -22,7 +23,7 @@ public class fillTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        this.transform.position = parent.transform.position + (new Vector3(-0.5f,0.5f,0));
+        this.transform.position = parent.transform.position + (new Vector3(-0.5f,0.7f,0));
         
         if(hasBall){
         image.enabled = true;
