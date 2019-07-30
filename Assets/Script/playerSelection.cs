@@ -8,22 +8,25 @@ public class playerSelection : MonoBehaviour
 {
     public Image image;
     public int index = 0;
-    public List<Sprite> characters = new List<Sprite>();
-
+    public int colorIndex = 0;
     public List<Image> ability = new List<Image>();
+    public CharacterManager cm;
 
 
     /// <summary>
     /// Update is called every frame, if the MonoBehaviour is enabled.
     /// </summary>
     
-    void Start()
+    public void CustomStart()
     {
+        cm = CharacterManager.instance;
         loadImage();
     }
-    void loadImage()
+    public void loadImage()
     {
-        image.sprite = characters[index];
+        
+        cm.colorBool[colorIndex] = true;
+        image.sprite = cm.CharacterSet[index][colorIndex];
         switch (index)
         {
             case 0:
@@ -84,7 +87,10 @@ public class playerSelection : MonoBehaviour
 
         }
         loadImage();
-
     }
 
+    public void colorChange(){
+        colorIndex = cm.changeColor(colorIndex);
+        loadImage();
+    }
 }

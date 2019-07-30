@@ -67,8 +67,8 @@ public class GameManager : MonoBehaviour
                 p2.character = playerCharacter.c;
                 break;
         }
-        p1.sr.sprite = characterManager.character[characterManager.p1Index];
-        p2.sr.sprite = characterManager.character[characterManager.p2Index];
+        // p1.sr.sprite = characterManager.character[characterManager.p1Index];
+        // p2.sr.sprite = characterManager.character[characterManager.p2Index];
         p1.initStats();
         p2.initStats();
     }
