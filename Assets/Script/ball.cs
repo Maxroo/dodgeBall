@@ -6,7 +6,7 @@ public class ball : MonoBehaviour
 {
     private Vector2 screenBounds;
     public GameObject parent;
-    public bool shooting, catchable,hasParent;
+    public bool shooting, catchable, hasParent;
     public Rigidbody2D rb2D;
     private float catchableSpeed = 5f;
     public SpriteRenderer sr;
@@ -24,24 +24,26 @@ public class ball : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Mathf.Abs(rb2D.velocity.x) <= catchableSpeed && Mathf.Abs(rb2D.velocity.y) <= catchableSpeed ){
+        if (Mathf.Abs(rb2D.velocity.x) <= catchableSpeed && Mathf.Abs(rb2D.velocity.y) <= catchableSpeed)
+        {
             shooting = false;
-        }else
+        }
+        else
         {
             shooting = true;
         }
         Vector3 targetPosition = transform.position;
         targetPosition.x = Mathf.Clamp(targetPosition.x, screenBounds.x * -1, screenBounds.x);
         targetPosition.y = Mathf.Clamp(targetPosition.y, screenBounds.y * -1, screenBounds.y);
-        if (targetPosition.y == screenBounds.y || targetPosition.y == - screenBounds.y )
+        if (targetPosition.y == screenBounds.y || targetPosition.y == -screenBounds.y)
         {
             Vector2 velocity = rb2D.velocity;
-            rb2D.velocity = new Vector2(velocity.x ,-velocity.y);
+            rb2D.velocity = new Vector2(velocity.x, -velocity.y);
         }
-        if (targetPosition.x == screenBounds.x || targetPosition.x == - screenBounds.x )
+        if (targetPosition.x == screenBounds.x || targetPosition.x == -screenBounds.x)
         {
             Vector2 velocity = rb2D.velocity;
-            rb2D.velocity = new Vector2(-velocity.x ,velocity.y);
+            rb2D.velocity = new Vector2(-velocity.x, velocity.y);
         }
         transform.position = targetPosition;
     }
@@ -58,22 +60,25 @@ public class ball : MonoBehaviour
     /// <param name="other">The other Collider2D involved in this collision.</param>
     void OnTriggerExit2D(Collider2D other)
     {
-        if(other.tag == "range"){
+        if (other.tag == "range")
+        {
             if (hasParent)
             {
                 hasParent = false;
                 catchable = true;
             }
         }
-        
+
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.tag == "Line"){
-            if(shooting){
-            sr.color = Color.white;
-            parent = null;
+        if (other.tag == "Line")
+        {
+            if (shooting)
+            {
+                sr.color = Color.white;
+                parent = null;
             }
         }
     }
