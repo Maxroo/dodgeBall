@@ -38,8 +38,8 @@ public class CharacterManager : MonoBehaviour
         CharacterSet.Add(characterA);
         CharacterSet.Add(characterB);
         CharacterSet.Add(characterC);
-        p1.CustomStart();
-        p2.CustomStart();
+        p1.myStart();
+        p2.myStart();
 
     }
 

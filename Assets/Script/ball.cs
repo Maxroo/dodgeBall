@@ -83,5 +83,10 @@ public class ball : MonoBehaviour
         }
     }
 
+    public void restart(){
+        sr.color = Color.white;
+        parent = null;
+    }
+
 
 }

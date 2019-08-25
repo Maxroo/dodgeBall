@@ -11,55 +11,81 @@ public class playerSelection : MonoBehaviour
     public int colorIndex = 0;
     public List<Image> ability = new List<Image>();
     public CharacterManager cm;
+    public MPCharacterManager MPcm;
 
 
     /// <summary>
     /// Update is called every frame, if the MonoBehaviour is enabled.
     /// </summary>
-    
-    public void CustomStart()
-    {
+
+    public void myStart(){
+        if(CharacterManager.instance != null){
         cm = CharacterManager.instance;
+
+        }else
+        {
+        MPcm = MPCharacterManager.instance;
+            
+        }
         loadImage();
+        print(name);
     }
     public void loadImage()
     {
-        
-        cm.colorBool[colorIndex] = true;
-        image.sprite = cm.CharacterSet[index][colorIndex];
+        if (cm != null)
+        {
+            cm.colorBool[colorIndex] = true;
+            image.sprite = cm.CharacterSet[index][colorIndex];
+        }
+        else
+        {
+            MPcm.colorBool[colorIndex] = true;
+            image.sprite = MPcm.CharacterSet[index][colorIndex];
+        }
         switch (index)
         {
             case 0:
-                for(int i = 0; i < 9; i++){
-                    if(i == 2 || i == 5 || i == 8){
+                for (int i = 0; i < 9; i++)
+                {
+                    if (i == 2 || i == 5 || i == 8)
+                    {
                         ability[i].enabled = false;
-                    }else
+                    }
+                    else
                     {
                         ability[i].enabled = true;
                     }
                 }
                 break;
             case 1:
-                for(int i = 0; i < 9; i++){
-                    if(i == 5 || i == 4 || i == 8){
+                for (int i = 0; i < 9; i++)
+                {
+                    if (i == 5 || i == 4 || i == 8)
+                    {
                         ability[i].enabled = false;
-                    }else
+                    }
+                    else
                     {
                         ability[i].enabled = true;
                     }
-               }
+                }
                 break;
             case 2:
-                for(int i = 0; i < 9; i++){
-                    if(i == 2 || i == 1 || i == 8){
+                for (int i = 0; i < 9; i++)
+                {
+                    if (i == 2 || i == 1 || i == 8)
+                    {
                         ability[i].enabled = false;
-                    }else
+                    }
+                    else
                     {
                         ability[i].enabled = true;
                     }
                 }
                 break;
         }
+
+
     }
     public void left()
     {
@@ -89,8 +115,16 @@ public class playerSelection : MonoBehaviour
         loadImage();
     }
 
-    public void colorChange(){
+    public void colorChange()
+    {
+        if(cm== null){
+        colorIndex = MPcm.changeColor(colorIndex);
+
+        }else
+        {
+            
         colorIndex = cm.changeColor(colorIndex);
+        }
         loadImage();
     }
 }

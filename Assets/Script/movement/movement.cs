@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Animations;
 
 public class movement : MonoBehaviour
 {
     [HideInInspector]
-    public Color32 teamColor = Color.blue;
+    public Animator animator;
     [HideInInspector]
+    public Color32 teamColor = Color.blue;
     public SpriteRenderer sr;
     [HideInInspector]
-    public int colorIndex,CharacterIndex;
+    public int colorIndex, CharacterIndex;
     [HideInInspector]
     public string x = "Horizontal", y = "Vertical", throwKey = "Throw", catchKey = "Catch";
     [HideInInspector]
@@ -18,15 +20,16 @@ public class movement : MonoBehaviour
     [HideInInspector]
     public Vector3 input = new Vector3(), forward, direction, targetPosition = new Vector3();
     [HideInInspector]
-    public float speed = 0.2f, catchTime = 0.5f, holdTimer = 2, force = 20f,max, min;
+    public float speed = 0.2f, catchTime = 0.5f, holdTimer = 2, force = 20f, max, min;
     [HideInInspector]
     public GameObject ball, face;
     [HideInInspector]
-    public bool catching, inCoolDown, hasBall;
+    public bool catching, inCoolDown, hasBall,isDead;
     [HideInInspector]
     public Rigidbody2D rb2D;
     [HideInInspector]
     public GameManager GameManagerCopy;
+    public GameObject blood;
     public fillTest ballTimer;
 
     void Start()
@@ -34,13 +37,15 @@ public class movement : MonoBehaviour
         GameManagerCopy = GameManager.instance;
         face = transform.GetChild(0).gameObject;
         rb2D = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
         rb2D.mass = 0.02f;
         rb2D.drag = 2;
         screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
         customStart();
     }
 
-    public virtual void customStart(){
+    public virtual void customStart()
+    {
         max = 0;
         min = -screenBounds.x;
     }
@@ -48,7 +53,7 @@ public class movement : MonoBehaviour
     // Update is called once per frame
     public void Update()
     {
-        if (GameManagerCopy.gameMode == Status.game)
+        if (GameManagerCopy.gameMode == Status.game && isDead != true)
         {
             input.x = Input.GetAxis(x);
             input.y = Input.GetAxis(y);
@@ -56,6 +61,15 @@ public class movement : MonoBehaviour
             targetPosition.x = Mathf.Clamp(targetPosition.x, min, max);
             targetPosition.y = Mathf.Clamp(targetPosition.y, screenBounds.y * -1, screenBounds.y);
             transform.position = targetPosition;
+            if (Mathf.Abs(input.x) > 0 || Mathf.Abs(input.y) > 0)
+            {
+                rb2D.velocity = Vector2.zero;
+                animator.SetBool("isWalking", true);
+            }
+            else
+            {
+                animator.SetBool("isWalking", false);
+            }
             if (input.x > 0)
             {
                 transform.rotation = Quaternion.Euler(0, 180, 0);
@@ -75,9 +89,13 @@ public class movement : MonoBehaviour
                     shoot();
                 }
             }
-            if (Input.GetButtonDown(catchKey) && !inCoolDown)
+            else
             {
-                StartCoroutine(catchingIEnumerator());
+
+                if (Input.GetButtonDown(throwKey) && !inCoolDown)
+                {
+                    StartCoroutine(catchingIEnumerator());
+                }
             }
 
         }
@@ -98,7 +116,7 @@ public class movement : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (GameManagerCopy.gameMode == Status.game)
+        if (GameManagerCopy.gameMode == Status.game && isDead != true)
         {
 
             if (other.gameObject.tag == "ball")
@@ -119,20 +137,11 @@ public class movement : MonoBehaviour
                     }
                     else
                     {
-
-                        if (this.gameObject.tag == "p1")
-                        {
-                            GameManagerCopy.p2Score++;
-
-                        }
-                        else if (this.gameObject.tag == "p2")
-                        {
-                            GameManagerCopy.p1Score++;
-                        }
                         Vector2 drawBack = ballscript.rb2D.velocity;
                         rb2D.velocity = drawBack;
+                        death();
                         ballscript.rb2D.velocity = drawBack / 3;
-                        StartCoroutine(GameManagerCopy.endturn());
+                        GameManagerCopy.checkEndturn(this);
                         transform.rotation = Quaternion.Euler(0, 0, 0);
                     }
 
@@ -152,7 +161,7 @@ public class movement : MonoBehaviour
         ballscript.parent = face;
         ballscript.hasParent = true;
     }
-     public void shoot()
+    public void shoot()
     {
         hasBall = false;
         ball ballscript = ball.GetComponent<ball>();
@@ -181,13 +190,13 @@ public class movement : MonoBehaviour
         {
             forward.x = -1;
         }
-      
+
         ballscript.shoot(force, forward);
     }
 
     public void initStats()
     {
-        switch (colorIndex)
+        switch (CharacterIndex)
         {
             default:
             case 0:
@@ -201,5 +210,36 @@ public class movement : MonoBehaviour
                 speed = 0.10f;
                 break;
         }
+
+        switch (colorIndex)
+        {
+            default:
+            case 0:
+                animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("Animation/Blue/Blue");
+                break;
+            case 1:
+                animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("Animation/Green/Green");
+                break;
+            case 2:
+                animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("Animation/Purple/Purple");
+                break;
+            case 3:
+                animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("Animation/Red/Red");
+                break;
+        }
+    }
+
+    public void death()
+    {
+        isDead = true;
+        GameObject rblood = Instantiate(blood, this.transform.position, Quaternion.Euler(0, Random.rotation.y, Random.rotation.z));
+        rblood.GetComponent<SpriteRenderer>().color = teamColor;
+        sr.enabled = false;
+    }
+
+    public void revive()
+    {
+        sr.enabled = true;
+        isDead = false;
     }
 }

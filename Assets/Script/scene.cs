@@ -19,4 +19,10 @@ public class scene : MonoBehaviour
     public void characterselection(){
         SceneManager.LoadScene("characterSelection");
     }
+     public void characterselectionp4(){
+        SceneManager.LoadScene("characterSelection2");
+    }
+    public void quit(){
+        Application.Quit();
+    }
 }
